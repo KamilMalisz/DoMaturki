@@ -1,0 +1,23 @@
+.addButtonWrapper {
+  margin: 0 10px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.addListing {
+  padding: 3px;
+  height: 1.5rem;
+  color: #000;
+  font-weight: bold;
+  background-color: #fff;
+  outline: none;
+  border: 2px solid black;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.addListing:hover {
+  color: #505050;
+  border-color: #505050;
+}

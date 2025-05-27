@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Quiz App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .quiz-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        h2 {
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 0.5rem 0;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .btn.correct {
+            background-color: #2ecc71;
+        }
+
+        .btn.wrong {
+            background-color: #e74c3c;
+        }
+
+        #next-btn {
+            display: none;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="quiz-container" id="quiz">
+        <h2 id="question">Question text</h2>
+        <div id="answer-buttons"></div>
+        <button id="next-btn" class="btn">Next</button>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "She _______ to the gym every morning.",
+                answers: [
+                    { text: "Go", correct: false },
+                    { text: "Goes", correct: true },
+                    { text: "Going", correct: false },
+                    { text: "Gone", correct: false }
+                ]
+            },
+            {
+                question: "I have never _______ such a beautiful place.",
+                answers: [
+                    { text: "See", correct: false },
+                    { text: "Saw", correct: false },
+                    { text: "Seen", correct: true },
+                    { text: "Seeing", correct: false }
+                ]
+            },
+            {
+                question: "They _______ dinner when I arrived.",
+                answers: [
+                    { text: "Had", correct: true },
+                    { text: "Were having", correct: false },
+                    { text: "Have", correct: false },
+                    { text: "Are having ", correct: false }
+                ]
+            }
+        ];
+
+        const questionElement = document.getElementById("question");
+        const answerButtons = document.getElementById("answer-buttons");
+        const nextButton = document.getElementById("next-btn");
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            nextButton.innerHTML = "Next";
+            showQuestion();
+        }
+
+        function showQuestion() {
+            resetState();
+            let currentQuestion = questions[currentQuestionIndex];
+            questionElement.innerText = currentQuestion.question;
+
+            currentQuestion.answers.forEach(answer => {
+                const button = document.createElement("button");
+                button.innerText = answer.text;
+                button.classList.add("btn");
+                button.addEventListener("click", () => selectAnswer(button, answer.correct));
+                answerButtons.appendChild(button);
+            });
+        }
+
+        function resetState() {
+            nextButton.style.display = "none";
+            answerButtons.innerHTML = "";
+        }
+
+        function selectAnswer(button, correct) {
+            const allButtons = answerButtons.querySelectorAll(".btn");
+            allButtons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.innerText === questions[currentQuestionIndex].answers.find(a => a.correct).text) {
+                    btn.classList.add("correct");
+                } else {
+                    btn.classList.add("wrong");
+                }
+            });
+
+            if (correct) {
+                score++;
+            }
+            nextButton.style.display = "block";
+        }
+
+        nextButton.addEventListener("click", () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showScore();
+            }
+        });
+
+        function showScore() {
+            resetState();
+            questionElement.innerText = `You scored ${score} out of ${questions.length}!`;
+            nextButton.innerText = "Play Again";
+            nextButton.style.display = "block";
+            nextButton.addEventListener("click", startQuiz);
+        }
+
+        startQuiz();
+    </script>
+</body>
+
+</html>
